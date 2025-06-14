@@ -17,6 +17,9 @@ importers:
       '@azure/core-sse':
         specifier: latest
         version: 2.2.0
+      dotenv:
+        specifier: ^16.5.0
+        version: 16.5.0
 
 packages:
 
@@ -76,6 +79,10 @@ packages:
     peerDependenciesMeta:
       supports-color:
         optional: true
+
+  dotenv@16.5.0:
+    resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
+    engines: {node: '>=12'}
 
   http-proxy-agent@7.0.2:
     resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
@@ -186,6 +193,8 @@ snapshots:
   debug@4.4.1:
     dependencies:
       ms: 2.1.3
+
+  dotenv@16.5.0: {}
 
   http-proxy-agent@7.0.2:
     dependencies:
