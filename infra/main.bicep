@@ -70,6 +70,7 @@ module webapi 'br/public:avm/res/web/site:0.15.1' = {
   params: {
     kind: 'app'
     name: webapiName
+    location: location
     tags: union(tags, { 'azd-service-name': 'webapi' })
     serverFarmResourceId: serverfarm.outputs.resourceId
   }
