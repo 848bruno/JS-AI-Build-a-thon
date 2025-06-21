@@ -1,0 +1,5 @@
+type: bing_grounding
+id: bing_search
+options:
+  tool_connections:
+    - /subscriptions/522c75e7-7c9a-4d60-a8bb-d6deef2e6d85/resourceGroups/rg-ambale/providers/Microsoft.MachineLearningServices/workspaces/ambal-mc682al4-swedencentral/connections/bing_search
