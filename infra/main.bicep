@@ -1,31 +1,78 @@
-// Add these parameters (if missing)
-param aoaiResourceName string = 'lang-memory-resource'  // Unique name
-param aoaiDeploymentName string = 'gpt-4o'
-param aoaiModelName string = 'gpt-4o'
-param aoaiModelVersion string = '2024-05-13'
-param location string = resourceGroup().location
-param tags object = {} // Add this line to define tags as an empty object by default
+param webapiName string = 'webapi-qwerty'
+param appServicePlanName string = 'appserviceplan'
+targetScope = 'subscription'
 
-// Add this resource (will skip if already exists)
+@minLength(1)
+@maxLength(64)
+@description('Name of the environment that can be used as part of naming resource convention')
+param environmentName string
 
-// Deploy OpenAI only if not already present
-resource aoaiAccountDeploy 'Microsoft.CognitiveServices/accounts@2023-05-01' = if (!contains(resourceGroup().tags, 'aoai-deployed')) {
-  name: aoaiResourceName
-  location: location
-  kind: 'OpenAI'
-  sku: { name: 'S0' }
-  properties: { customSubDomainName: aoaiResourceName }
-  tags: union(tags, { 'aoai-deployed': 'true' })  // Tag to track deployment
+@minLength(1)
+@description('Primary location for all resources')
+param location string
+
+param rg string = ''
+param webappName string = 'webapp'
+
+@description('Location for the Static Web App')
+@allowed(['westus2', 'centralus', 'eastus2', 'westeurope', 'eastasia', 'eastasiastage'])
+@metadata({
+  azd: {
+    type: 'location'
+  }
+})
+param webappLocation string
+
+@description('Id of the user or app to assign application roles')
+param principalId string
+
+// ---------------------------------------------------------------------------
+// Common variables
+var abbrs = loadJsonContent('./abbreviations.json')
+var tags = {
+  'azd-env-name': environmentName
 }
 
-resource aoaiModelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = if (!contains(resourceGroup().tags, 'aoai-deployed')) {
-  name: aoaiDeploymentName
-  parent: aoaiAccountDeploy
-  properties: {
-    model: {
-      format: 'OpenAI'
-      name: aoaiModelName
-      version: aoaiModelVersion
-    }
+// ---------------------------------------------------------------------------
+// Resources
+
+// Organize resources in a resource group ✅
+resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+  name: !empty(rg) ? rg : '${abbrs.resourcesResourceGroups}${environmentName}'
+  location: location
+  tags: tags
+}
+
+module webapp 'br/public:avm/res/web/static-site:0.7.0' = {
+  name: 'webapp'
+  scope: resourceGroup
+  params: {
+    name: webappName
+    location: webappLocation
+    tags: union(tags, { 'azd-service-name': webappName })
+    sku: 'Standard'
   }
 }
+
+output WEBAPP_URL string = webapp.outputs.defaultHostname
+module serverfarm 'br/public:avm/res/web/serverfarm:0.4.1' = {
+  name: 'appserviceplan'
+  scope: resourceGroup
+  params: {
+    name: appServicePlanName
+    skuName: 'B1'
+  }
+}
+
+module webapi 'br/public:avm/res/web/site:0.15.1' = {
+  name: 'webapi'
+  scope: resourceGroup
+  params: {
+    kind: 'app'
+    name: webapiName
+    location: location
+    tags: union(tags, { 'azd-service-name': 'webapi' })
+    serverFarmResourceId: serverfarm.outputs.resourceId
+  }
+}
+output WEBAPI_URL string = webapi.outputs.defaultHostname
