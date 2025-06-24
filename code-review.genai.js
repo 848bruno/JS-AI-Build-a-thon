@@ -1,3 +1,12 @@
+
+// code-review.genai.js
+const { Octokit } = require("@octokit/rest");
+
+const token = process.env.GITHUB_TOKEN;
+
+const octokit = new Octokit({ auth: token });
+
+console.log("Reviewing code...");
 const changes = await git.diff({ staged: true });
 
 defDiff("CODE_CHANGES", changes);
