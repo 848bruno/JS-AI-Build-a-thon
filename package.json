@@ -4,6 +4,10 @@
     "@azure-rest/ai-inference": "latest",
     "@azure/core-auth": "latest",
     "@azure/core-sse": "latest",
+    "@modelcontextprotocol/sdk": "^1.13.1",
     "dotenv": "^16.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.3"
   }
 }
