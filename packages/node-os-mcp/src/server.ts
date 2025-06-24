@@ -1,6 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import * as os from "os";
 
+// Create server instance
 const server = new McpServer({
     name: "node-os-mcp",
     description: "A server that provides tools to get information about the operating system.",
@@ -44,7 +45,6 @@ async () => {
 }
 );
 
-
 server.tool(
 "get_hostname",
 "Get the hostname of the local machine",
@@ -71,6 +71,7 @@ async () => ({
     })
 );
 
+
 server.tool(
 "get_uptime",
 "Get the uptime of the local machine in seconds",
@@ -83,5 +84,7 @@ async () => ({
     isError: false
     })
 );
+
+
 
 export { server };
