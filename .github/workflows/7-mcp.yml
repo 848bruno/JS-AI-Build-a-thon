@@ -41,14 +41,13 @@ jobs:
         with:
           fetch-depth: 0 # Let's get all the branches
 
-      - - name: Check node-os-mcp directory exists
-  id: check_node-os-mcp
-  run: |
-    if [ -d "packages/node-os-mcp" ]; then
-      echo "node-os-mcp_exists=true" >> $GITHUB_OUTPUT
-    else
-      echo "node-os-mcp_exists=false" >> $GITHUB_OUTPUT
-
+      - name: Check node-os-mcp directory exists
+        id: check_node-os-mcp
+        run: |
+          if [ -d "packages/node-os-mcp" ]; then
+            echo "agent_exists=false" >> $GITHUB_OUTPUT
+          else
+            echo "agent_exists=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Update to step 8
