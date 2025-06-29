@@ -1,59 +1,48 @@
-name: Step 5, Add Conversation Memory
+name: Deploy on Azure
 
 on:
   workflow_dispatch:
   push:
-    paths:
-      - 'packages/webapi/package.json'
     branches:
       - main
 
 permissions:
-  contents: write
+  id-token: write
+  contents: read
 
 jobs:
-  get_current_step:
-    name: Check current step number
+  build:
     runs-on: ubuntu-latest
+    env:
+      AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - id: get_step
-        run: |
-          echo "current_step=$(cat ./.github/steps/-step.txt)" >> $GITHUB_OUTPUT
-    outputs:
-      current_step: ${{ steps.get_step.outputs.current_step }}
 
-  on_langchain_dependency:
-    name: On addition of LangChain to package.json
-    needs: get_current_step
+      - name: Install azd
+        uses: Azure/setup-azd@v2
 
-    if: >-
-      ${{ !github.event.repository.is_template
-          && needs.get_current_step.outputs.current_step == 5 }}
-
-    runs-on: ubuntu-latest
-
-    steps:
-      # We'll need to check out the repository to verify the package.json content
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
         with:
-          fetch-depth: 0 # Let's get all the branches
+          node-version: 20
 
-      - name: Check for LangChain in package.json
-        id: check_langchain
-        run: |
-          if [ -f "packages/webapi/package.json" ] && grep -q "@langchain/openai" packages/webapi/package.json; then
-            echo "langchain_exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "langchain_exists=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Update to step 6
-        if: steps.check_langchain.outputs.langchain_exists == 'true'
-        uses: skills/action-update-step@v2
+      - name: Azure Login (OIDC)
+        uses: azure/login@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          from_step: 5
-          to_step: 6
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Debug Azure Account
+        run: az account show
+
+      - name: Provision and Deploy
+        run: azd up --no-prompt
+        env:
+          AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
+          AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
