@@ -92,6 +92,8 @@
       "unicorn/prefer-global-this": "off",
       "unicorn/prefer-module": "off",
       "unicorn/no-new-array": "off",
+       "unicorn/prefer-top-level-await": "off",
+    "promise/prefer-await-to-then": "off",
       "unicorn/prevent-abbreviations": [
         "error",
         {

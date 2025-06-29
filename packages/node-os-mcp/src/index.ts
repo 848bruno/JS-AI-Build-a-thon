@@ -43,4 +43,6 @@ async function start() {
   }
 }
 
-await start(); // ✅ Top-level await (Eslint: unicorn/prefer-top-level-await)
+(async () => {
+  await start();
+})(); // Wrapped in IIFE to support top-level await in CommonJS
