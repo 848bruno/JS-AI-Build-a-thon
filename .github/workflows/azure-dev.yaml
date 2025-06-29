@@ -1,3 +1,11 @@
+name: Deploy on Azure
+
+on:
+  workflow_dispatch: # allows manual run via GitHub Actions UI
+  push:
+    branches:
+      - main # runs automatically when pushing to `main`
+
 jobs:
   build:
     runs-on: ubuntu-latest
