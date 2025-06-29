@@ -1,10 +1,10 @@
 name: Deploy on Azure
 
 on:
-  workflow_dispatch: # allows manual run via GitHub Actions UI
+  workflow_dispatch:
   push:
     branches:
-      - main # runs automatically when pushing to `main`
+      - main
 
 permissions:
   id-token: write
@@ -37,10 +37,10 @@ jobs:
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Debug Azure account
+      - name: Debug Azure Account
         run: az account show
 
-      - name: Provision and deploy application
+      - name: Provision and Deploy
         run: azd up --no-prompt
         env:
           AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
