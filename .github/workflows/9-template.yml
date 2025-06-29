@@ -1,34 +1,48 @@
-name: Step 9, Complete Quest - Templates
+name: Deploy on Azure
 
 on:
   workflow_dispatch:
-  issues:
-    types: [opened]
+  push:
+    branches:
+      - main
 
 permissions:
-  contents: write
-  issues: write
+  id-token: write
+  contents: read
 
 jobs:
-  update_step_on_complete_quest:
-    if: |
-      github.event.issue.title == 'Quest: I want a Production-Ready Template to customize'
+  build:
     runs-on: ubuntu-latest
+    env:
+      AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Update to step 10
-        uses: skills/action-update-step@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          from_step: 9
-          to_step: 10
+      - name: Install azd
+        uses: Azure/setup-azd@v2
 
-      - name: Comment and close issue
-        uses: peter-evans/close-issue@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v4
         with:
-          comment: |
-            🎉 Congratulations! You've completed the Templates quest. Your progress has been updated and you can now continue to the next step.
+          node-version: 20
 
-            👉 [Go to the main README to continue](../README.md)
+      - name: Azure Login (OIDC)
+        uses: azure/login@v1
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Debug Azure Account
+        run: az account show
+
+      - name: Provision and Deploy
+        run: azd up --no-prompt
+        env:
+          AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
+          AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
