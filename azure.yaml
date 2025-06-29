@@ -23,19 +23,18 @@ services:
     project: ./packages/api
     language: ts
     host: function
-
-hooks:
-  postprovision:
-    windows:
-      shell: pwsh
-      run: azd env get-values > packages/api/.env
-    posix:
-      shell: sh
-      run: azd env get-values > packages/api/.env
-  postup:
-    windows:
-      shell: pwsh
-      run: node scripts/upload-documents.js "$env:UPLOAD_URL"
-    posix:
-      shell: sh
-      run: node scripts/upload-documents.js "$UPLOAD_URL"
+# hooks:
+#   postprovision:
+#     windows:
+#       shell: pwsh
+#       run: azd env get-values > packages/api/.env
+#     posix:
+#       shell: sh
+#       run: azd env get-values > packages/api/.env
+#   postup:
+#     windows:
+#       shell: pwsh
+#       run: node scripts/upload-documents.js "$env:UPLOAD_URL"
+#     posix:
+#       shell: sh
+#       run: node scripts/upload-documents.js "$UPLOAD_URL"

@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit';
-import { loadMessages, saveMessages, clearMessages } from '../utils/chatStore.js';
+import { loadMessages, saveMessages, clearMessages } from '../utils/chat-store.js';
 import './chat.css';
 
 export class ChatInterface extends LitElement {
