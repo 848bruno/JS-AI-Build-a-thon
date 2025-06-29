@@ -35,15 +35,15 @@ To use GenAIScript with GitHub Models, you need to set up a GitHub token.
 
 1. Open [this link](https://github.com/marketplace/models/azure-openai/gpt-4-1/playground) in a new tab and click on the **Use this model** button.
 
-    ![Use model](https://github.com/Azure-Samples/JS-AI-Build-a-thon/blob/assets/jsai-buildathon-assets/use-gh-model.png?raw=true)
+   ![Use model](https://github.com/Azure-Samples/JS-AI-Build-a-thon/blob/assets/jsai-buildathon-assets/use-gh-model.png?raw=true)
 
-    Follow the instructions provided to get a free developer key, named Personal Access Token (classic).
+   Follow the instructions provided to get a free developer key, named Personal Access Token (classic).
 
 2. Create a new file in your project root called `.env` and add the following line:
 
-    ```text
-    GITHUB_TOKEN=<your_github_token_here>
-    ```
+   ```text
+   GITHUB_TOKEN=<your_github_token_here>
+   ```
 
 ## ✅ Activity: Create a code review script
 
@@ -56,7 +56,7 @@ Now that you have GenAIScript installed, let's create a script that will analyze
 ```javascript
 const changes = await git.diff({ staged: true });
 
-defDiff("CODE_CHANGES", changes);
+defDiff('CODE_CHANGES', changes);
 
 $`## Role
 You are a senior developer whose job is to review code changes and provide meaningful feedback.
@@ -70,6 +70,7 @@ Review <CODE_CHANGES>, point out possible mistakes or bad practices, and provide
 ```
 
 Let's break down what this script does:
+
 - It uses the `git.diff()` function to get the staged changes in your Git repository.
 - The `defDiff()` function defines a variable `CODE_CHANGES` that contains the code changes, to provide context to the AI model.
 - The `$` template literal is used to define the prompt AI model. It instructs the model to review the code changes, point out mistakes, and provide suggestions for improvement.
@@ -93,17 +94,18 @@ You should then see a new tab open with the AI's code review feedback. It should
 To complete this quest and **AUTOMATICALLY UPDATE** your progress, you MUST push your code to the repository as described below.
 
 **Checklist**
+
 - [ ] Have a `code-review.genai.js` file at the root of your project
 
 1. In the terminal, run the following commands to add, commit, and push your changes to the repository:
 
-    ```bash
-    git add .
-    git commit -m "Add code review script"
-    git push
-    ```
+   ```bash
+   git add .
+   git commit -m "Add code review script"
+   git push
+   ```
 
-2.  After pushing your changes, **WAIT ABOUT 15 SECONDS FOR GITHUB ACTIONS TO UPDATE YOUR README**.
+2. After pushing your changes, **WAIT ABOUT 15 SECONDS FOR GITHUB ACTIONS TO UPDATE YOUR README**.
 
 > To skip this quest and select a different one, click this button:
 >

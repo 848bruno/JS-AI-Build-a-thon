@@ -24,6 +24,7 @@ This step assumes you have already completed the previous steps in this project 
 > If you have done the previous quest, ensure you pull your changes from GitHub using `git pull` before continuing with this project to update the project README.
 
 ## Step 1️⃣: Add LangChain.js to your project
+
 We'll first install LangChain.js in our project to ensure our backend can communicate with Azure's LLM endpoints using LangChain's abstractions.
 
 In your webapi directory, run
@@ -31,6 +32,7 @@ In your webapi directory, run
 ```bash
 npm install langchain @langchain/openai
 ```
+
 The current api code uses the Azure REST SDK directly. By switching to LangChain.js, we will decouple to code to take advantage of its abstractions and features like chains (composing tools and LLMs) and memory (storing conversation history).
 
 ### Update imports
@@ -38,23 +40,24 @@ The current api code uses the Azure REST SDK directly. By switching to LangChain
 Open `server.js` and replace:
 
 ```javascript
-import { AzureKeyCredential } from "@azure/core-auth";
-import { isUnexpected } from "@azure-rest/ai-inference";
-``` 
+import { AzureKeyCredential } from '@azure/core-auth';
+import { isUnexpected } from '@azure-rest/ai-inference';
+```
 
 with:
 
 ```javascript
-import { AzureChatOpenAI } from "@langchain/openai";
+import { AzureChatOpenAI } from '@langchain/openai';
 ```
 
 ### Update client initialization
+
 Initialize LangChain's `AzureChatOpenAI` model client by replacing:
 
 ```javascript
 const client = ModelClient(
   process.env.AZURE_INFERENCE_SDK_ENDPOINT,
-  new AzureKeyCredential(process.env.AZURE_INFERENCE_SDK_KEY)
+  new AzureKeyCredential(process.env.AZURE_INFERENCE_SDK_KEY),
 );
 ```
 
@@ -65,36 +68,36 @@ const chatModel = new AzureChatOpenAI({
   azureOpenAIApiKey: process.env.AZURE_INFERENCE_SDK_KEY,
   azureOpenAIApiInstanceName: process.env.INSTANCE_NAME, // In target url: https://<INSTANCE_NAME>.services...
   azureOpenAIApiDeploymentName: process.env.DEPLOYMENT_NAME, // i.e "gpt-4o"
-  azureOpenAIApiVersion: "2024-08-01-preview", // In target url: ...<VERSION>
+  azureOpenAIApiVersion: '2024-08-01-preview', // In target url: ...<VERSION>
   temperature: 1,
   maxTokens: 4096,
 });
 ```
 
 > [!Note]
-> Update your `.env` with the missing variables 
+> Update your `.env` with the missing variables
 
 ### Update chat endpoint
 
 Replace the Azure REST SDK api call logic in the try-catch block (_app.post("/chat")_) with the following code:
 
 ```javascript
-  try {
-    const response = await chatModel.invoke(messages);
-    res.json({ reply: response.content });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      error: "Model call failed",
-      message: err.message,
-      reply: "Sorry, I encountered an error. Please try again."
-    });
-  }
+try {
+  const response = await chatModel.invoke(messages);
+  res.json({ reply: response.content });
+} catch (err) {
+  console.error(err);
+  res.status(500).json({
+    error: 'Model call failed',
+    message: err.message,
+    reply: 'Sorry, I encountered an error. Please try again.',
+  });
+}
 ```
 
 ### Test the integration
 
-Restart the server to confirm the changes are working. 
+Restart the server to confirm the changes are working.
 
 ## Step 2️⃣: Add conversation memory
 
@@ -105,7 +108,6 @@ Then ask the model _"Quiz time. What's my name?"_. The model will not remember y
 ![Memory test](https://github.com/Azure-Samples/JS-AI-Build-a-thon/blob/assets/jsai-buildathon-assets/memory-test.png?raw=true)
 
 To add memory, you will use LangChain's built-in memory modules - `ChatMessageHistory` and `ConversationSummaryMemory`. Conversation memory allows the AI to reference previous exchanges in a session, enabling more context-aware and coherent responses and LangChain.js provides built-in memory modules that make this easy to implement. With LangChain, you can implement stateful AI app experiences without manually managing chat logs, and you can easily switch between in-memory, Redis, or other storage options.
-
 
 ### How it would work in your app
 
@@ -118,8 +120,8 @@ To add memory, you will use LangChain's built-in memory modules - `ChatMessageHi
 Add the following imports to the top of your `server.js` file:
 
 ```javascript
-import { BufferMemory } from "langchain/memory";
-import { ChatMessageHistory } from "langchain/stores/message/in_memory";
+import { BufferMemory } from 'langchain/memory';
+import { ChatMessageHistory } from 'langchain/stores/message/in_memory';
 ```
 
 ### Set up session-based in-memory store
@@ -141,7 +143,7 @@ function getSessionMemory(sessionId) {
     sessionMemories[sessionId] = new BufferMemory({
       chatHistory: history,
       returnMessages: true,
-      memoryKey: "chat_history",
+      memoryKey: 'chat_history',
     });
   }
   return sessionMemories[sessionId];
@@ -206,7 +208,7 @@ app.post("/chat", async (req, res) => {
 
 To test this, open the chat UI in your browser and send a message like _"Hey, you can call me Terry. What should I call you?"_ and then ask _"Quiz time. What's my name?"_. The model should remember your name.
 
-  ![Memory test passed](https://github.com/Azure-Samples/JS-AI-Build-a-thon/blob/assets/jsai-buildathon-assets/memory-test-passed.png?raw=true)
+![Memory test passed](https://github.com/Azure-Samples/JS-AI-Build-a-thon/blob/assets/jsai-buildathon-assets/memory-test-passed.png?raw=true)
 
 ## ✅ Activity: Push your updated code to the repository
 
@@ -220,13 +222,13 @@ To complete this quest and **AUTOMATICALLY UPDATE** your progress, you MUST push
 
 1. In the terminal, run the following commands to add, commit, and push your changes to the repository:
 
-    ```bash
-    git add .
-    git commit -m "Updated to use LangChain.js and added conversation memory"
-    git push
-    ```
+   ```bash
+   git add .
+   git commit -m "Updated to use LangChain.js and added conversation memory"
+   git push
+   ```
 
-2.  After pushing your changes, **WAIT ABOUT 15 SECONDS FOR GITHUB ACTIONS TO UPDATE YOUR README**.
+2. After pushing your changes, **WAIT ABOUT 15 SECONDS FOR GITHUB ACTIONS TO UPDATE YOUR README**.
 
 > To skip this quest and select a different one, click this button:
 >
@@ -235,6 +237,7 @@ To complete this quest and **AUTOMATICALLY UPDATE** your progress, you MUST push
 ## 📚 Further Reading
 
 Here are some additional resources to help you learn more about LangChain.js and its features:
+
 - [Get started with Serverless AI Chat with RAG using LangChain.js](https://github.com/Azure-Samples/serverless-chat-langchainjs)
 - [LangChain.js x Microsoft docs](https://js.langchain.com/docs/integrations/platforms/microsoft/)
 - [Ask YouTube: LangChain.js + Azure Quickstart](https://github.com/Azure-Samples/langchainjs-quickstart-demo)

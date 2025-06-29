@@ -35,7 +35,6 @@ Implement the standard RAG architecture following this flow. It should include:
      - **Hybrid search:** Combines the techniques of keyword search and semantic search to take advantage of the strengths of both types of representations. Hybrid search improves the quality of results by maximizing relevance and precision of retrieved information.
 
 3. **Generation:**
-
    - **How it works:** With the most relevant passages retrieved, the generator's task is to produce a final response, synthesizing and expressing this information in natural language.
    - **Mechanisms:** The generator, which is typically a model like GPT, BART, or T5, uses both the query and the relevant documents found by retriever to create its response. It is important to note that the generator relies on the retriever to find the relevant documents.
 

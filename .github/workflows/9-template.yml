@@ -28,7 +28,7 @@ jobs:
       - name: Comment and close issue
         uses: peter-evans/close-issue@v3
         with:
-            comment: |
-                🎉 Congratulations! You've completed the Templates quest. Your progress has been updated and you can now continue to the next step.
-    
-                👉 [Go to the main README to continue](../README.md)
+          comment: |
+            🎉 Congratulations! You've completed the Templates quest. Your progress has been updated and you can now continue to the next step.
+
+            👉 [Go to the main README to continue](../README.md)

@@ -10,7 +10,7 @@
 2. [Visual Studio Code](https://code.visualstudio.com/) installed
 3. [Node.js](https://nodejs.org/en) installed
 4. An Azure subscription. Use the [free trial](https://azure.microsoft.com/free/) if you don't have one, or [Azure for Students](https://azure.microsoft.com/free/students/) if you are a student.
-4. [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd?tabs=winget-windows%2Cbrew-mac%2Cscript-linux&pivots=os-windows) installed
+5. [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd?tabs=winget-windows%2Cbrew-mac%2Cscript-linux&pivots=os-windows) installed
 
 ## 📝 Overview
 
@@ -49,15 +49,15 @@ This will initialize a new Vite project and add the necessary files and folders 
 │ ├─── index.html
 │ ├─── package.json
 │ ├─── src/
-│ │    ├── main.js
-│ │    ├── index.css
-│ │    ├── components/
-│ │    │    ├── chat.js
-│ │    │    └── chat.css
-│ │    └── utils/
-│ │        └── chatStore.js
+│ │ ├── main.js
+│ │ ├── index.css
+│ │ ├── components/
+│ │ │ ├── chat.js
+│ │ │ └── chat.css
+│ │ └── utils/
+│ │ └── chatStore.js
 │ └─── public/
-│      └── vite.svg
+│ └── vite.svg
 ├─.azure/
 ├─infra/
 │ ├─── main.bicep
@@ -73,7 +73,7 @@ This will initialize a new Vite project and add the necessary files and folders 
 - `.azure/`: contains essential configurations for Azure.
 - `azure.yaml`: a configuration file that defines each service in your application and maps them to the corresponding Azure resources defined in `infra`.
 
-To run the application locally, 
+To run the application locally,
 
 ```sh
 cd webapp
@@ -87,7 +87,7 @@ Navigate to `http://localhost:5173` in your browser to see the chat interface.
 
 ## Step 2️⃣: Add your AI model to the chat interface
 
-First, update your project to include a `webapi`. At the root of your project, create a new folder called `packages` and move the `webapp` folder into it. 
+First, update your project to include a `webapi`. At the root of your project, create a new folder called `packages` and move the `webapp` folder into it.
 
 _If you are prompted to update imports for 'webapp', select `Yes`._
 
@@ -96,14 +96,14 @@ Inside the `packages` folder, create a new folder called `webapi`. This will be 
 Your project structure should now look like this:
 
 ```markdown
-  .azure/
-  infra/
-  ├─packages/
-  │ ├─── webapp/
-  │ ├─── webapi/
-  .gitignore
-  azure.yaml
-  README.md
+.azure/
+infra/
+├─packages/
+│ ├─── webapp/
+│ ├─── webapi/
+.gitignore
+azure.yaml
+README.md
 ```
 
 ### Expose an HTTP endpoint for your AI API
@@ -113,6 +113,7 @@ The `ai-foundry.js` file you created in the previous step is a script and cannot
 To do this, we will set up an Express.js API in the `webapi` folder.
 
 ### Initialize a Node.js project
+
 In the `webapi` folder, run the following command to initialize a new Node.js project:
 
 ```bash
@@ -122,6 +123,7 @@ npm init es6 -y
 This will create a new `package.json` file in the `webapi` folder.
 
 ### Install required dependencies
+
 Run the following command to install the required dependencies:
 
 ```bash
@@ -131,16 +133,17 @@ npm install express cors dotenv @azure-rest/ai-inference @azure/core-auth
 Move the `.env` file you created in the previous step into the `webapi` folder.
 
 ### Create an Express.js API
+
 Create a new file called `server.js` in the `webapi` folder and add the following code:
 
 <details> <summary>Click to expand the `server.js` code</summary>
 
 ```javascript
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import ModelClient from "@azure-rest/ai-inference";
-import { AzureKeyCredential } from "@azure/core-auth";
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import ModelClient from '@azure-rest/ai-inference';
+import { AzureKeyCredential } from '@azure/core-auth';
 
 dotenv.config();
 
@@ -150,30 +153,30 @@ app.use(express.json());
 
 const client = new ModelClient(
   process.env.AZURE_INFERENCE_SDK_ENDPOINT,
-  new AzureKeyCredential(process.env.AZURE_INFERENCE_SDK_KEY)
+  new AzureKeyCredential(process.env.AZURE_INFERENCE_SDK_KEY),
 );
 
-app.post("/chat", async (req, res) => {
+app.post('/chat', async (req, res) => {
   const userMessage = req.body.message;
   const messages = [
-    { role: "system", content: "You are a helpful assistant" },
-    { role: "user", content: userMessage },
+    { role: 'system', content: 'You are a helpful assistant' },
+    { role: 'user', content: userMessage },
   ];
 
   try {
-    const response = await client.path("chat/completions").post({
+    const response = await client.path('chat/completions').post({
       body: {
         messages,
         max_tokens: 4096,
         temperature: 1,
         top_p: 1,
-        model: "gpt-4o",
+        model: 'gpt-4o',
       },
     });
     res.json({ reply: response.body.choices[0].message.content });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Model call failed" });
+    res.status(500).json({ error: 'Model call failed' });
   }
 });
 
@@ -182,9 +185,11 @@ app.listen(PORT, () => {
   console.log(`AI API server running on port ${PORT}`);
 });
 ```
+
 </details>
 
 ### Start the server
+
 In the `webapi/package.json` file, add the following script to start the server:
 
 ```json
@@ -199,7 +204,7 @@ Run the following command to start the server:
 npm start
 ```
 
-Your API server should now be running on `http://localhost:3001`. 
+Your API server should now be running on `http://localhost:3001`.
 
 ### Update the chat app to call the API
 
@@ -231,21 +236,21 @@ The project is already configured to deploy the webapp (frontend) to Azure Stati
 
 ```yaml
 webapp:
-    project: webapp
-    host: staticwebapp
-    language: js
-    dist: dist
-    hooks:
-      predeploy:
-        windows:
-          shell: pwsh
-          run: npm run build
-        posix:
-          shell: sh
-          run: npm run build
+  project: webapp
+  host: staticwebapp
+  language: js
+  dist: dist
+  hooks:
+    predeploy:
+      windows:
+        shell: pwsh
+        run: npm run build
+      posix:
+        shell: sh
+        run: npm run build
 ```
 
-and we already have the bicep code to create the service in `infra/main.bicep` 
+and we already have the bicep code to create the service in `infra/main.bicep`
 
 ```bash
 module webapp 'br/public:avm/res/web/static-site:0.7.0' = {
@@ -259,15 +264,16 @@ module webapp 'br/public:avm/res/web/static-site:0.7.0' = {
   }
 }
 ```
+
 However, remember you updated the path to the `webapp` folder when we moved it to the `packages` folder. **So change the project path in `azure.yaml` to `project: packages/webapp` for the webapp service**
 
 The webapi service is not yet configured in the `azure.yaml` file. To add the webapi service, add the following code to the `azure.yaml` file inside the `services` node:
 
 ```yaml
 webapi:
-    project: packages/webapi
-    host: appservice
-    language: js
+  project: packages/webapi
+  host: appservice
+  language: js
 ```
 
 We'll also need to add the bicep code to create the App Service resource in `infra/main.bicep`. Add the following code to the `main.bicep` file to create an App Service and App Service Plan for the webapi service:
@@ -307,14 +313,14 @@ Update your output section at the end of the `main.bicep` file to include the fo
 output WEBAPI_URL string = webapi.outputs.defaultHostname
 ```
 
-To deploy the application, 
+To deploy the application,
+
 - Ensure you are logged in with `azd auth login`,
 - Run `azd up` and enter an environment name (e.g., `build-a-thon`),
 - Select your Azure subscription,
 - Select a location for the resources.
 
   ![azd up](https://github.com/Azure-Samples/JS-AI-Build-a-thon/blob/assets/jsai-buildathon-assets/azd-up.png?raw=true)
-
 
 ## ✅ Activity: Push deployment infra code to your repository
 
@@ -329,13 +335,13 @@ To complete this quest and **AUTOMATICALLY UPDATE** your progress, you MUST push
 
 1. In the terminal, run the following commands to add, commit, and push your changes to the repository:
 
-    ```bash
-    git add .
-    git commit -m "Added a simple chat interface"
-    git push
-    ```
+   ```bash
+   git add .
+   git commit -m "Added a simple chat interface"
+   git push
+   ```
 
-2.  After pushing your changes, **WAIT ABOUT 15 SECONDS FOR GITHUB ACTIONS TO UPDATE YOUR README**.
+2. After pushing your changes, **WAIT ABOUT 15 SECONDS FOR GITHUB ACTIONS TO UPDATE YOUR README**.
 
 > To skip this quest and select a different one, click this button:
 >

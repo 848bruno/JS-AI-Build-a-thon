@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "ai-foundry.js"
+      - 'ai-foundry.js'
     branches:
       - main
 
@@ -46,8 +46,8 @@ jobs:
       - name: Check package.json
         uses: skills/action-check-file@v1
         with:
-          file: "ai-foundry.js"
-          search: "completions"
+          file: 'ai-foundry.js'
+          search: 'completions'
 
       # In README.md, switch step 3 for step 4.
       - name: Update to step 3

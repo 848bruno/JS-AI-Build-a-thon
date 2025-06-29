@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "sample.js"
+      - 'sample.js'
     branches:
       - main
 
@@ -23,7 +23,6 @@ jobs:
         run: echo "current_step=$(cat ./.github/steps/-step.txt)" >> $GITHUB_OUTPUT
     outputs:
       current_step: ${{ steps.get_step.outputs.current_step }}
-
 
   on_ghmodelcode:
     name: On addition of the basic code connecting to GitHub Models
@@ -46,8 +45,8 @@ jobs:
       - name: Check package.json
         uses: skills/action-check-file@v1
         with:
-          file: "sample.js"
-          search: "GITHUB_TOKEN"
+          file: 'sample.js'
+          search: 'GITHUB_TOKEN'
 
       # In README.md, switch step 2 for step 3.
       - name: Update to step 2

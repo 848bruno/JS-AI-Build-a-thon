@@ -25,10 +25,9 @@ This build-a-thon is organized into **quests** — choose the one that matches y
 Each quest has a required activity (e.g., push code). After you complete it, **GitHub Actions** will automatically unlock your next step.
 
 **Tips:**  
-⭐ **Recommended path**⭐ Start with the first quest and go in order for the **best** learning experience.  
+⭐ **Recommended path**⭐ Start with the first quest and go in order for the **best** learning experience.
 
 🔄 To restart, click the **Reset** button at the top of any page.
-
 
 ## ✅ Activity: Select a quest
 
@@ -51,6 +50,3 @@ Click on a quest and follow the instructions to get started.
 [![Static Badge](https://img.shields.io/badge/Quest-I_want_to_automate_code_reviews-crimson)](../../issues/new?title=Quest:+I+want+to+automate+code+reviews&labels=quest&body=📄+Let%27s+use+AI+to+review+your+code%21%0A%0A**Please+click+on+Create+below,+then+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
 
 [![Static Badge](https://img.shields.io/badge/Quest-I_want_to_create_templates-pink)](../../issues/new?title=Quest:+I+want+to+create+templates&labels=quest&body=📄+Let%27s+create+templates+to+streamline+future+projects%21+Excited+to+design+and+build%21%0A%0A**Please+wait+about+15+seconds.+This+issue+will+automatically+close+and+the+README+will+update+with+your+next+instructions.**)
-
-
-

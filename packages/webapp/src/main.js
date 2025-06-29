@@ -1,2 +1,2 @@
-import './index.css'
-import './components/chat.js'
+import './index.css';
+import './components/chat.js';

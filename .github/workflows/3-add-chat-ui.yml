@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "azure.yaml"
+      - 'azure.yaml'
     branches:
       - main
 
@@ -44,8 +44,8 @@ jobs:
       - name: Check azure.yaml
         uses: skills/action-check-file@v1
         with:
-          file: "azure.yaml"
-          search: "staticwebapp"
+          file: 'azure.yaml'
+          search: 'staticwebapp'
 
       - name: Update to step 4
         uses: skills/action-update-step@v2

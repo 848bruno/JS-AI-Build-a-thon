@@ -80,7 +80,6 @@ To understand the architecture of the project, let's break it down into its indi
    - The source documents such as terms of service, privacy policy, and support guides for the Contoso Real Estate are stored in Azure Blob Storage. This is where the PDF documents are uploaded and retrieved from.
 
 5. **Azure OpenAI Service:**
-
    - This service is where the AI Model (a Large Language Model or LLM) is hosted. The model can understand and generate natural language. This is used to embed text chunks or generate answers based on the vector search from the database.
 
 Let's examine the application flow based on the architecture diagram:

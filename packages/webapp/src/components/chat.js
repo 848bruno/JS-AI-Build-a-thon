@@ -31,8 +31,8 @@ export class ChatInterface extends LitElement {
     this.messages = loadMessages();
   }
 
-  updated(changedProps) {
-    if (changedProps.has('messages')) {
+  updated(changedProperties) {
+    if (changedProperties.has('messages')) {
       saveMessages(this.messages);
     }
   }
@@ -43,52 +43,56 @@ export class ChatInterface extends LitElement {
         <div class="chat-header">
           <button class="clear-cache-btn" @click=${this._clearCache}>🧹Clear Chat</button>
           <label class="rag-toggle">
-            <input type="checkbox" ?checked=${this.ragEnabled} @change=${this._toggleRag}>
+            <input type="checkbox" ?checked=${this.ragEnabled} @change=${this._toggleRag} />
             Use Employee Handbook
           </label>
         </div>
         <div class="chat-messages">
-          ${this.messages.map(message => html`
-            <div class="message ${message.role === 'user' ? 'user-message' : 'ai-message'}">
-              <div class="message-content">
-                <span class="message-sender">${message.role === 'user' ? 'You' : 'AI'}</span>
-                <p>${message.content}</p>
-                ${message.sources && message.sources.length > 0 ? html`
-                  <details class="sources">
-                    <summary>📚 Sources</summary>
-                    <div class="sources-content">
-                      ${message.sources.map(source => html`<p>${source}</p>`)}
-                    </div>
-                  </details>
-                ` : ''}
+          ${this.messages.map(
+            (message) => html`
+              <div class="message ${message.role === 'user' ? 'user-message' : 'ai-message'}">
+                <div class="message-content">
+                  <span class="message-sender">${message.role === 'user' ? 'You' : 'AI'}</span>
+                  <p>${message.content}</p>
+                  ${message.sources && message.sources.length > 0
+                    ? html`
+                        <details class="sources">
+                          <summary>📚 Sources</summary>
+                          <div class="sources-content">${message.sources.map((source) => html`<p>${source}</p>`)}</div>
+                        </details>
+                      `
+                    : ''}
+                </div>
               </div>
-            </div>
-          `)}
-          ${this.isRetrieving ? html`
-            <div class="message system-message">
-              <p>📚 Searching employee handbook...</p>
-            </div>
-          ` : ''}
-          ${this.isLoading && !this.isRetrieving ? html`
-            <div class="message ai-message">
-              <div class="message-content">
-                <span class="message-sender">AI</span>
-                <p>Thinking...</p>
-              </div>
-            </div>
-          ` : ''}
+            `,
+          )}
+          ${this.isRetrieving
+            ? html`
+                <div class="message system-message">
+                  <p>📚 Searching employee handbook...</p>
+                </div>
+              `
+            : ''}
+          ${this.isLoading && !this.isRetrieving
+            ? html`
+                <div class="message ai-message">
+                  <div class="message-content">
+                    <span class="message-sender">AI</span>
+                    <p>Thinking...</p>
+                  </div>
+                </div>
+              `
+            : ''}
         </div>
         <div class="chat-input">
-          <input 
-            type="text" 
-            placeholder="Ask about company policies, benefits, etc..." 
+          <input
+            type="text"
+            placeholder="Ask about company policies, benefits, etc..."
             .value=${this.inputMessage}
             @input=${this._handleInput}
             @keyup=${this._handleKeyUp}
           />
-          <button @click=${this._sendMessage} ?disabled=${this.isLoading || !this.inputMessage.trim()}>
-            Send
-          </button>
+          <button @click=${this._sendMessage} ?disabled=${this.isLoading || !this.inputMessage.trim()}>Send</button>
         </div>
       </div>
     `;
@@ -99,18 +103,18 @@ export class ChatInterface extends LitElement {
     this.messages = [];
   }
 
-  _handleInput(e) {
-    this.inputMessage = e.target.value;
+  _handleInput(event) {
+    this.inputMessage = event.target.value;
   }
 
-  _handleKeyUp(e) {
-    if (e.key === 'Enter' && this.inputMessage.trim() && !this.isLoading) {
+  _handleKeyUp(event) {
+    if (event.key === 'Enter' && this.inputMessage.trim() && !this.isLoading) {
       this._sendMessage();
     }
   }
 
-  _toggleRag(e) {
-    this.ragEnabled = e.target.checked;
+  _toggleRag(event) {
+    this.ragEnabled = event.target.checked;
   }
 
   async _sendMessage() {
@@ -118,7 +122,7 @@ export class ChatInterface extends LitElement {
 
     const userMessage = {
       role: 'user',
-      content: this.inputMessage
+      content: this.inputMessage,
     };
 
     this.messages = [...this.messages, userMessage];
@@ -135,8 +139,8 @@ export class ChatInterface extends LitElement {
         {
           role: 'assistant',
           content: response.reply,
-          sources: response.sources || []
-        }
+          sources: response.sources || [],
+        },
       ];
     } catch (error) {
       console.error('Error:', error);
@@ -145,7 +149,7 @@ export class ChatInterface extends LitElement {
         {
           role: 'assistant',
           content: '❌ Sorry, something went wrong. Please try again.',
-        }
+        },
       ];
     } finally {
       this.isLoading = false;
@@ -154,17 +158,21 @@ export class ChatInterface extends LitElement {
   }
 
   async _apiCall(message) {
-    const res = await fetch("http://localhost:3001/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    const response = await fetch('http://localhost:3001/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message,
-        useRAG: this.ragEnabled
+        useRAG: this.ragEnabled,
       }),
     });
-    const data = await res.json();
+    const data = await response.json();
     return data;
   }
 }
 
-customElements.define('chat-interface', ChatInterface);
+// 'window' is the global object in browsers that represents the browser window and provides access to the DOM, browser APIs, and global variables.
+// Here, we check if 'window' exists (to ensure the code runs only in a browser environment) and if 'window.customElements' is available (to register the custom element).
+if (typeof globalThis !== 'undefined' && globalThis.customElements) {
+  globalThis.customElements.define('chat-interface', ChatInterface);
+}

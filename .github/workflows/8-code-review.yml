@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "code-review.genai.js"
+      - 'code-review.genai.js'
     branches:
       - main
 
@@ -22,7 +22,6 @@ jobs:
         run: echo "current_step=$(cat ./.github/steps/-step.txt)" >> $GITHUB_OUTPUT
     outputs:
       current_step: ${{ steps.get_step.outputs.current_step }}
-
 
   on_ghmodelcode:
     name: Add code review script
@@ -45,8 +44,8 @@ jobs:
       - name: Check package.json
         uses: skills/action-check-file@v1
         with:
-          file: "code-review.genai.js"
-          search: "GITHUB_TOKEN"
+          file: 'code-review.genai.js'
+          search: 'GITHUB_TOKEN'
 
       # In README.md, switch step 2 for step 3.
       - name: Update to step 9

@@ -57,7 +57,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           from_step: ${{ needs.get_current_step.outputs.current_step }}
           to_step: 0
-          
+
       - name: Rewrite badge links in README.md to absolute URLs
         run: |
           OWNER_REPO="${GITHUB_REPOSITORY}"

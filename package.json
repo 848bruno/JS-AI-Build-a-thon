@@ -13,8 +13,8 @@
     "build:api": "npm run build --workspace=api",
     "clean": "npm run clean --workspaces --if-present",
     "upload:docs": "node scripts/upload-documents.js http://localhost:7071",
-    "lint": "xo",
-    "lint:fix": "xo --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "format": "prettier --list-different --write .",
     "prepare": "simple-git-hooks || echo 'simple-git-hooks install skipped'"
   },
@@ -44,7 +44,10 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@eslint/js": "^9.30.0",
     "concurrently": "^9.0.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.5",
     "lint-staged": "^16.0.0",
     "prettier": "^3.0.3",
     "rimraf": "^6.0.1",
